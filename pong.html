@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pong in HTML5!</title>
+</head>
+<body>
+<div id ="content" class="body">
+  <article>
+    <div class = "topbar">
+        <h1>Pong in HTML<h2>
+    </div>
+    <div style="float: left; margin-right: 1em;">
+      <div id="gamediv">
+        <div id = "gamediv">
+          <div id= "titleScreen" style = "display: none;">
+            <h1>Pong!</h1>
+            <p>Game is based on HTML5
+              <b>canvas</b>
+              " and "
+              <b>audio</b>
+              ". With some simple javascript to make it work"
+            </p>
+            <p class = "thisisit">
+              Thomas
+            </p>
+            <button id = "playButton">Play Again!</button>
+          </div>
+          <div id ="playscreen" style="display: block;">
+            <canvas width="640" height="360" id="gameCanvas">
+            </canvas>
+            <div id="computerScore"></div>
+            <div id="playerScore"></div>
+            <div class ="ingamebuttons">
+              <button id="pauseButton">Pause</button>
+              <button id="soundButton">Mute</button>
+            </div>
+            <div id ="pauseText">Game is Paused</div>
+          </div>
+        </article>
+        <script type ="text/javascript" src="pong.js"></script>
+      </body>
