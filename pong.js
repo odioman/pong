@@ -118,11 +118,97 @@ function update() {
           //check collision between ball and cpu player
             else if (game.ball.x - game.ball.radius <= game.playerWidth) {
               if (game.ball.y + game.ball.radius >= game.computer.y + game.playerHeight /2) {
-                && game.ball.y + game.ball.radius
+                && game.ball.y + game.ball.radius <= game.computer.y + game.playerHeight / 2) {
+                  playSound(soundLeft);
+
+                  if (game.ball.vx >= -game.ball.maxspeed) {
+                    game.ball.vx -= game.ball.multiplier;
+                  }
+
+                  changeBallDirection(game.computer);
+                } else {
+                  game.player.score++;
+                  document.getElementById("playerScore").innerHTML = game.player.score;
+                  game.ball.reset();
+                  game.ball.vx = 1;
+                }
+              }
+              game.ball.x += game.ball.vx * moveAmount;
+              game.ball.y += game.ball.vy * moveAmount;
+            }
+            draw();
+
+            setTimeout(update, 1000/30);
+
+            gameTimeLast = dateTime;
+          }
+
+          function changeBallDirection(player) {
+            if (player.y > game.ball.y)
+              game.ball.vy -= (player.y - game.ball.y) / game.playerHeight * game.ball.maxspeed;
+            else if(player.y < game.ball.y)
+              game.ball.vy += (game.ball.y - player.y) / game.playerHeight * game.ball.maxspeed;
+
+              game.ball.vx *= -1
+
+            }
+            //Draw in the canvas
+            function draw() {
+              if (!game.pause) {
+                ctx.clearRect(0,0, canvas.width, canvas.height);
+                // var bgFade
+
+                ctx.fillStyle = "rgb(64,64,64)";
+                var size = 3;
+                for (var y=0; y<canvas.height; y+=size*3) {
+                  ctx.fillRect(canvas.width/2 - size/2, y, size, size);
+                }
+                // left player
+                ctx.fillstyle = "rgba(128,128,128,.8)";
+                ctx.fillRect(0, game.computer.y - game.playerHeight / 2,
+                        game.playerWidth, game.playerHeight);
+                // right player
+                ctx.fillRect(canvas.width - game.playerWidth, game.player.y -
+                game.playerHeight / 2, game.playerWidth, game.playerHeight);
+
+                ctx.fillStyle = "rgba(192, 192, 192, 8)";
+                ctx.fillRect(game.ball.x - game.ball.radius, game.ball.y
+                        - game.ball.radius, game.ball.radius * 2, game.ball.radius *2);
+              }
+
+            }
+            function intro() {
+              var playButton = document.getElementById('playButton');
+              playButton.onclick = function() {
+                document.getElementById('titleScreen').style.display = "none";
+                document.getElementById('playScreen').style.display = "block";
+                init();
+              }
+
+              var pauseButton = document.getElementById('pauseButton');
+              pauseButton.onClick = function() {
+                if (!game.pause) {
+                  game.pause = true;
+                  this.innerHTML = "Continue";
+                  document.getElementById('pauseText').style.display = "block";
+                }
+                else {
+                  game.pause = false;
+                  this.innerHTML = "Pause";
+                  document.getElementById('pauseText').style.display = "none";
+                }
+              }
+
+              var soundButton = document.getElementById('soundButton');
+              soundButton.onclick = function() {
+                if(!game.sound) {
+                  game.sound = true;
+                  this.innerHTML = "Turn off sound";
+                }
+                else {
+                  game.sound = false;
+                  this.innerHTML = "Turn on sound";
+                }
               }
             }
-          }
-        }
-      }
-  }
-}
+intro();
