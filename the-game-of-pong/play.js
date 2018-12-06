@@ -21,10 +21,10 @@ game = {
     y : canvas.height / 2,
     vx : Math.round(Math.random()) ? 1 : -1,
     vy : Math.random() * 4 - 2,
-    boucnes : 0,
+    bounces : 0,
     radius : 3,
     reset: function() {
-      this.x = canvas.width /2;
+      this.x = canvas.width / 2;
       this.y = canvas.height / 2;
       this.vy = Math.random() * 4 -2;
     },
@@ -62,6 +62,7 @@ function playSound(snd) {
   if(game.sound) {
     try {
       if (!snd.paused) {
+        //pause and reset
         snd.pause();
         snd.currentTime = 0;
       }
@@ -69,7 +70,6 @@ function playSound(snd) {
     }
     catch(e) {}
   }
-
 }
 
 function update() {
@@ -82,16 +82,18 @@ function update() {
   moveAmount = gameTime > 0 ? gameTime / 10 : 1;
 //how the cpu player interacts
   if (!game.pause) {
+    /*Cpu player moves */
     if (game.computer.y + 20 < game.ball.y && game.computer.y + game.playerHeight/2 <= canvas.height)
         game.computer.y += game.computer.speed * moveAmount;
     else if (game.computer.y - 20 > game.ball.y && game.computer.y - game.playerHeight/2 >= 0)
         game.computer.y -= game.computer.speed * moveAmount;
+      /*Change Direction of Ball when hit */
     if (game.ball.y + game.ball.radius > canvas.height
       || game.ball.y - game.ball.radius < 0) {
         playSound(soundWall);
         if(game.ball.y <= game.ball.radius)
           game.ball.y = game.ball.radius;
-        else {
+        else
           game.ball.y = canvas.height - game.ball.radius;
 
         game.ball.vy *= -1;
@@ -99,7 +101,7 @@ function update() {
 
         //check contact between ball and player
         if (game.ball.x + game.ball.radius >= canvas.width - game.playerWidth) {
-          if (game.ball.y + game.ball.radius <= game.player.y + game.playerHeight /2) {
+          if (game.ball.y + game.ball.radius >= game.player.y - game.playerHeight /2
             && game.ball.y + game.ball.radius <= game.player.y + game.playerHeight / 2) {
               playSound(soundRight);
 
@@ -109,15 +111,15 @@ function update() {
 
               changeBallDirection(game.player);
             } else {
-              game.computer.score ++;
+              game.computer.score++;
               document.getElementById("computerScore").innerHTML = game.computer.score;
               game.ball.reset();
               game.ball.vx = -1;
             }
           }
-          //check collision between ball and cpu player
+          //check contact between ball and cpu player
             else if (game.ball.x - game.ball.radius <= game.playerWidth) {
-              if (game.ball.y + game.ball.radius >= game.computer.y + game.playerHeight /2) {
+              if (game.ball.y + game.ball.radius >= game.computer.y - game.playerHeight /2
                 && game.ball.y + game.ball.radius <= game.computer.y + game.playerHeight / 2) {
                   playSound(soundLeft);
 
@@ -156,7 +158,6 @@ function update() {
             function draw() {
               if (!game.pause) {
                 ctx.clearRect(0,0, canvas.width, canvas.height);
-                // var bgFade
 
                 ctx.fillStyle = "rgb(64,64,64)";
                 var size = 3;
@@ -175,7 +176,6 @@ function update() {
                 ctx.fillRect(game.ball.x - game.ball.radius, game.ball.y
                         - game.ball.radius, game.ball.radius * 2, game.ball.radius *2);
               }
-
             }
             function intro() {
               var playButton = document.getElementById('playButton');
@@ -211,4 +211,5 @@ function update() {
                 }
               }
             }
+
 intro();
